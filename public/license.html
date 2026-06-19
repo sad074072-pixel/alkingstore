@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الترخيص - ALKING STORE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">AS</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="scripts.html" class="nav-link">المنتجات</a>
+                <a href="license.html" class="nav-link active">الترخيص</a>
+                <a href="free.html" class="nav-link">مجاني</a>
+            </div>
+            <button class="login-btn" onclick="redirectToLogin()">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <!-- License Info -->
+    <div class="content-container">
+        <h1>معلومات الترخيص</h1>
+        <div class="info-card">
+            <h2>شروط الاستخدام</h2>
+            <ul>
+                <li>جميع السكريبتات والملفات محمية بحقوق الملكية الفكرية</li>
+                <li>لا يسمح بإعادة توزيع ��لملفات بدون إذن</li>
+                <li>كل ملف له مفتاح ترخيص فريد</li>
+                <li>التحديثات والدعم الفني متوفر للعملاء المسجلين</li>
+            </ul>
+        </div>
+
+        <div class="info-card">
+            <h2>أنواع الترخيص</h2>
+            <ul>
+                <li><strong>ترخيص شخصي:</strong> للاستخدام الشخصي فقط</li>
+                <li><strong>ترخيص تجاري:</strong> للاستخدام في الأعمال التجارية</li>
+                <li><strong>ترخيص مؤسسي:</strong> للاستخدام في المؤسسات الكبرى</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 ALKING STORE. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

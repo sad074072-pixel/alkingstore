@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - ALKING STORE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">AS</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="scripts.html" class="nav-link">المنتجات</a>
+            </div>
+            <button class="login-btn" onclick="logout()">تسجيل الخروج</button>
+        </div>
+    </nav>
+
+    <!-- Dashboard Container -->
+    <div class="dashboard-container">
+        <h1>لوحة التحكم</h1>
+        <div class="dashboard-grid">
+            <!-- Upload Section -->
+            <div class="dashboard-card">
+                <h2>تحميل سكريبت جديد</h2>
+                <form id="uploadForm" class="upload-form">
+                    <div class="form-group">
+                        <label>اسم السكريبت</label>
+                        <input type="text" id="title" placeholder="اسم السكريبت" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>الوصف</label>
+                        <textarea id="description" placeholder="وصف السكريبت" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>عنوان IP</label>
+                        <input type="text" id="ip_address" placeholder="192.168.1.1">
+                    </div>
+
+                    <div class="form-group">
+                        <label>الملف</label>
+                        <input type="file" id="file" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">رفع السكريبت</button>
+                </form>
+            </div>
+
+            <!-- Scripts List Section -->
+            <div class="dashboard-card">
+                <h2>سكريبتاتك</h2>
+                <div id="scriptsList" class="scripts-list">
+                    <p>جاري تحميل السكريبتات...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Check if user is logged in
+        if (!localStorage.getItem('token')) {
+            window.location.href = 'login.html';
+        }
+
+        const token = localStorage.getItem('token');
+
+        // Load user scripts
+        async function loadScripts() {
+            try {
+                const response = await fetch('http://localhost:5000/api/scripts/user', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                const scripts = await response.json();
+                const scriptsList = document.getElementById('scriptsList');
+                scriptsList.innerHTML = '';
+
+                if (scripts.length === 0) {
+                    scriptsList.innerHTML = '<p>لم تحمّل أي سكريبتات بعد</p>';
+                    return;
+                }
+
+                scripts.forEach(script => {
+                    const card = document.createElement('div');
+                    card.className = 'script-card';
+                    card.innerHTML = `
+                        <h3>${script.title}</h3>
+                        <p>${script.description}</p>
+                        <p class="license">الترخيص: ${script.license_key}</p>
+                        <p class="downloads">التحميلات: ${script.downloads}</p>
+                        <p class="status">الحالة: ${script.status}</p>
+                        <div class="script-actions">
+                            <button onclick="editScript(${script.id})" class="btn btn-secondary">تحرير</button>
+                            <button onclick="deleteScript(${script.id})" class="btn btn-danger">حذف</button>
+                        </div>
+                    `;
+                    scriptsList.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading scripts:', error);
+            }
+        }
+
+        // Upload script
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('title', document.getElementById('title').value);
+            formData.append('description', document.getElementById('description').value);
+            formData.append('ip_address', document.getElementById('ip_address').value);
+            formData.append('file', document.getElementById('file').files[0]);
+
+            try {
+                const response = await fetch('http://localhost:5000/api/scripts/upload', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                if (response.ok) {
+                    alert('تم تحميل السكريبت بنجاح!');
+                    document.getElementById('uploadForm').reset();
+                    loadScripts();
+                } else {
+                    alert('خطأ في تحميل السكريبت');
+                }
+            } catch (error) {
+                alert('خطأ في الاتصال بالخادم');
+                console.error(error);
+            }
+        });
+
+        // Delete script
+        async function deleteScript(id) {
+            if (confirm('هل أنت متأكد من حذف هذا السكريبت؟')) {
+                try {
+                    const response = await fetch(`http://localhost:5000/api/scripts/${id}`, {
+                        method: 'DELETE',
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+
+                    if (response.ok) {
+                        alert('تم حذف السكريبت بنجاح!');
+                        loadScripts();
+                    }
+                } catch (error) {
+                    console.error('Error deleting script:', error);
+                }
+            }
+        }
+
+        // Edit script (placeholder)
+        function editScript(id) {
+            alert('وظيفة التحرير قيد التطوير');
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Load scripts on page load
+        loadScripts();
+    </script>
+</body>
+</html>

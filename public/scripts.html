@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>المنتجات - ALKING STORE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">AS</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="scripts.html" class="nav-link active">المنتجات</a>
+                <a href="license.html" class="nav-link">الترخيص</a>
+                <a href="free.html" class="nav-link">مجاني</a>
+            </div>
+            <button class="login-btn" onclick="redirectToLogin()">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>المنتجات والسكريبتات</h1>
+        <div class="header-buttons">
+            <button class="btn btn-primary" onclick="filterScripts('all')">قائمة الرغبة ❤️</button>
+            <button class="btn btn-primary" onclick="filterScripts('all')">التحكم السريع 🎮</button>
+        </div>
+    </div>
+
+    <!-- Scripts Grid -->
+    <div class="scripts-container">
+        <div id="scriptsGrid" class="scripts-grid">
+            <p>جاري تحميل المنتجات...</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 ALKING STORE. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        // Load all scripts
+        async function loadAllScripts() {
+            try {
+                const response = await fetch('http://localhost:5000/api/scripts');
+                const scripts = await response.json();
+                const grid = document.getElementById('scriptsGrid');
+                grid.innerHTML = '';
+
+                if (scripts.length === 0) {
+                    grid.innerHTML = '<p>لا توجد منتجات متاحة حالياً</p>';
+                    return;
+                }
+
+                scripts.forEach(script => {
+                    const card = document.createElement('div');
+                    card.className = 'script-card-grid';
+                    const fileSize = (script.file_size / 1024).toFixed(2);
+                    card.innerHTML = `
+                        <div class="script-status">متاح</div>
+                        <h3>${script.title}</h3>
+                        <p>${script.description || 'بدون وصف'}</p>
+                        <p class="script-info">حجم الملف: ${fileSize} KB</p>
+                        <p class="script-info">التحميلات: ${script.downloads}</p>
+                        <p class="script-license">الترخيص: ${script.license_key}</p>
+                        <p class="script-ip">الخادم: ${script.ip_address}</p>
+                        <div class="script-card-actions">
+                            <button class="btn btn-secondary" onclick="editScriptInfo(${script.id})">تحرير البيانات</button>
+                            <button class="btn btn-primary" onclick="downloadScript(${script.id})">⬇️ تحميل السكريبت</button>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading scripts:', error);
+                document.getElementById('scriptsGrid').innerHTML = '<p>خطأ في تحميل المنتجات</p>';
+            }
+        }
+
+        // Download script
+        function downloadScript(id) {
+            window.location.href = `http://localhost:5000/api/scripts/download/${id}`;
+        }
+
+        // Edit script (placeholder)
+        function editScriptInfo(id) {
+            alert('هذه الميزة متاحة بعد تسجيل الدخول');
+            window.location.href = 'login.html';
+        }
+
+        // Filter scripts (placeholder)
+        function filterScripts(filter) {
+            console.log('Filter:', filter);
+        }
+
+        // Redirect to login
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+
+        // Load scripts on page load
+        loadAllScripts();
+    </script>
+</body>
+</html>

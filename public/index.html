@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALKING STORE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">AS</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link active">الرئيسية</a>
+                <a href="scripts.html" class="nav-link">المنتجات</a>
+                <a href="license.html" class="nav-link">الترخيص</a>
+                <a href="free.html" class="nav-link">مجاني</a>
+            </div>
+            <button class="login-btn" onclick="redirectToLogin()">تسجيل الدخول</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero">
+        <div class="hero-content">
+            <div class="welcome-badge">مرحباً بك في ALKING STORE</div>
+            <h1 class="hero-title">ALKING STORE</h1>
+            <p class="hero-subtitle">أفضل منصة لتحميل وبيع السكريبتات والملفات</p>
+            <div class="hero-buttons">
+                <button class="btn btn-secondary" onclick="document.getElementById('contact').scrollIntoView()">تواصل معنا</button>
+                <button class="btn btn-primary" onclick="window.location.href='scripts.html'">تحقق من المنتجات الآن</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="features-container">
+            <div class="feature-card">
+                <div class="feature-icon">📥</div>
+                <h3>تحميل سهل</h3>
+                <p>حمّل السكريبتات والملفات بكل سهولة وأمان</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🔐</div>
+                <h3>آمن وموثوق</h3>
+                <p>كل الملفات محمية بأفضل معايير الأمان</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>سريع جداً</h3>
+                <p>تحميل فوري بدون تأخير أو مشاكل</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <h2>تواصل معنا</h2>
+        <div class="contact-info">
+            <p>📧 البريد الإلكتروني: info@alkingstore.com</p>
+            <p>💬 الدعم: support@alkingstore.com</p>
+            <p>📱 WhatsApp: +966XXXXXXXXX</p>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 ALKING STORE. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        function redirectToLogin() {
+            window.location.href = 'login.html';
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تسجيل الدخول - ALKING STORE</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <span class="logo-text">AS</span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">الرئيسية</a>
+                <a href="scripts.html" class="nav-link">المنتجات</a>
+                <a href="license.html" class="nav-link">الترخيص</a>
+                <a href="free.html" class="nav-link">مجاني</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Container -->
+    <div class="auth-container">
+        <div class="auth-form-wrapper">
+            <div class="auth-header">
+                <h2>مرحباً بعودتك!</h2>
+                <p>سجّل دخولك للمنصة إلى ALKING STORE</p>
+            </div>
+
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label>البريد الإلكتروني</label>
+                    <input type="email" id="email" placeholder="example@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label>كلمة المرور</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">←  تسجيل الدخول</button>
+            </form>
+
+            <div class="auth-divider">أو تابع باستخدام</div>
+
+            <div class="social-buttons">
+                <button class="social-btn google-btn">
+                    <span>G</span> Google
+                </button>
+                <button class="social-btn discord-btn">
+                    <span>⬤</span> Discord
+                </button>
+            </div>
+
+            <p class="auth-footer">ليس لديك حساب؟ <a href="register.html">سجّل الآن</a></p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://localhost:5000/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = 'dashboard.html';
+                } else {
+                    alert(data.message);
+                }
+            } catch (error) {
+                alert('خطأ في الاتصال بالخادم');
+                console.error(error);
+            }
+        });
+    </script>
+</body>
+</html>
