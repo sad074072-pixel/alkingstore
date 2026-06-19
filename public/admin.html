@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم - Admin</title>
+    <link rel="stylesheet" href="admin-styles.css">
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <span class="logo-text">AS</span>
+                </div>
+                <h2>Admin Panel</h2>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" onclick="switchTab('dashboard')">
+                    <span class="icon">📊</span> لوحة التحكم
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('products')">
+                    <span class="icon">📦</span> المنتجات
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('users')">
+                    <span class="icon">👥</span> المستخدمين
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('give-product')">
+                    <span class="icon">🎁</span> إعطاء منتج
+                </a>
+                <a href="#" class="nav-item" onclick="switchTab('transactions')">
+                    <span class="icon">💰</span> المعاملات
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <button class="btn-logout" onclick="logout()">تسجيل الخروج</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="admin-header">
+                <div class="header-left">
+                    <h1 id="page-title">لوحة التحكم</h1>
+                </div>
+                <div class="header-right">
+                    <span class="admin-name" id="admin-name">مسؤول</span>
+                    <div class="admin-avatar">AS</div>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <section id="dashboard-tab" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon products">📦</div>
+                        <div class="stat-info">
+                            <h3>إجمالي المنتجات</h3>
+                            <p class="stat-number" id="total-products">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon users">👥</div>
+                        <div class="stat-info">
+                            <h3>إجمالي المستخدمين</h3>
+                            <p class="stat-number" id="total-users">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon downloads">⬇️</div>
+                        <div class="stat-info">
+                            <h3>إجمالي التحميلات</h3>
+                            <p class="stat-number" id="total-downloads">0</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-icon revenue">💵</div>
+                        <div class="stat-info">
+                            <h3>إجمالي الإيرادات</h3>
+                            <p class="stat-number" id="total-revenue">0 ر.س</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-activities">
+                    <h2>آخر المنتجات المضافة</h2>
+                    <div id="recent-products" class="products-table">
+                        <p>جاري التحميل...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Products Tab -->
+            <section id="products-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>إدارة المنتجات</h2>
+                    <button class="btn btn-primary" onclick="switchTab('add-product')">➕ إضافة منتج جديد</button>
+                </div>
+
+                <div id="products-list" class="products-table">
+                    <p>جاري التحميل...</p>
+                </div>
+            </section>
+
+            <!-- Add Product Tab -->
+            <section id="add-product-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>إضافة منتج جديد</h2>
+                </div>
+
+                <form id="add-product-form" class="form-card">
+                    <div class="form-group">
+                        <label>اسم المنتج</label>
+                        <input type="text" id="product-title" placeholder="مثال: سكريبت البوت" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>الوصف</label>
+                        <textarea id="product-description" placeholder="وصف المنتج" rows="4"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>السعر (0 = مجاني)</label>
+                            <input type="number" id="product-price" placeholder="0" min="0" step="0.01" value="0">
+                        </div>
+
+                        <div class="form-group">
+                            <label>عنوان IP</label>
+                            <input type="text" id="product-ip" placeholder="192.168.1.1">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>الملف</label>
+                        <input type="file" id="product-file" required>
+                        <small>الحد الأقصى: 100MB</small>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-full">📤 رفع المنتج</button>
+                </form>
+            </section>
+
+            <!-- Users Tab -->
+            <section id="users-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>إدارة المستخدمين</h2>
+                </div>
+
+                <div id="users-list" class="users-table">
+                    <p>جاري التحميل...</p>
+                </div>
+            </section>
+
+            <!-- Give Product Tab -->
+            <section id="give-product-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>إعطاء منتج لمستخدم</h2>
+                </div>
+
+                <div class="form-card">
+                    <div class="form-group">
+                        <label>اختر المستخدم</label>
+                        <select id="user-select" required>
+                            <option value="">-- اختر مستخدم --</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>اختر المنتج</label>
+                        <select id="product-select" required>
+                            <option value="">-- اختر منتج --</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-primary btn-full" onclick="giveProductToUser()">🎁 إعطاء المنتج</button>
+                </div>
+
+                <div id="given-products" class="given-products-list">
+                    <h3>المنتجات المعطاة</h3>
+                    <div id="given-products-table"></div>
+                </div>
+            </section>
+
+            <!-- Transactions Tab -->
+            <section id="transactions-tab" class="tab-content">
+                <div class="section-header">
+                    <h2>سجل المعاملات</h2>
+                </div>
+
+                <div id="transactions-list" class="transactions-table">
+                    <p>جاري التحميل...</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for editing product -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>تعديل المنتج</h2>
+            <form id="edit-product-form" class="form">
+                <input type="hidden" id="edit-product-id">
+                
+                <div class="form-group">
+                    <label>اسم المنتج</label>
+                    <input type="text" id="edit-title" required>
+                </div>
+
+                <div class="form-group">
+                    <label>الوصف</label>
+                    <textarea id="edit-description" rows="4"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>السعر</label>
+                        <input type="number" id="edit-price" step="0.01" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>عنوان IP</label>
+                        <input type="text" id="edit-ip">
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">حفظ التغييرات</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">إلغاء</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000';
+        const token = localStorage.getItem('token');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        // Check admin access
+        if (!token || !user) {
+            window.location.href = 'login.html';
+        }
+
+        // Set admin name
+        document.getElementById('admin-name').textContent = user.username || 'مسؤول';
+
+        // Switch tabs
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active from nav items
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            // Show selected tab
+            const tab = document.getElementById(tabName + '-tab');
+            if (tab) {
+                tab.classList.add('active');
+                
+                // Update page title
+                const titles = {
+                    'dashboard': 'لوحة التحكم',
+                    'products': 'إدارة المنتجات',
+                    'users': 'إدارة المستخدمين',
+                    'give-product': 'إعطاء منتج',
+                    'add-product': 'إضافة منتج جديد',
+                    'transactions': 'سجل المعاملات'
+                };
+                document.getElementById('page-title').textContent = titles[tabName] || 'صفحة';
+
+                // Set active nav item
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    if (item.getAttribute('onclick').includes(tabName)) {
+                        item.classList.add('active');
+                    }
+                });
+
+                // Load data
+                if (tabName === 'dashboard') {
+                    loadDashboard();
+                } else if (tabName === 'products') {
+                    loadProducts();
+                } else if (tabName === 'users') {
+                    loadUsers();
+                } else if (tabName === 'give-product') {
+                    loadUsersSelect();
+                    loadProductsSelect();
+                    loadGivenProducts();
+                } else if (tabName === 'transactions') {
+                    loadTransactions();
+                }
+            }
+        }
+
+        // Load dashboard stats
+        async function loadDashboard() {
+            try {
+                const [productsRes, usersRes] = await Promise.all([
+                    fetch(`${API_URL}/api/scripts`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_URL}/api/admin/users`, { headers: { 'Authorization': `Bearer ${token}` } })
+                ]);
+
+                const products = await productsRes.json();
+                const users = await usersRes.json();
+
+                let totalDownloads = 0;
+                let totalRevenue = 0;
+
+                products.forEach(p => {
+                    totalDownloads += p.downloads || 0;
+                    totalRevenue += (p.price || 0);
+                });
+
+                document.getElementById('total-products').textContent = products.length;
+                document.getElementById('total-users').textContent = users.length;
+                document.getElementById('total-downloads').textContent = totalDownloads;
+                document.getElementById('total-revenue').textContent = totalRevenue.toFixed(2) + ' ر.س';
+
+                // Show recent products
+                const recentProductsHtml = products.slice(0, 5).map(p => `
+                    <tr>
+                        <td>${p.title}</td>
+                        <td>${p.description || '-'}</td>
+                        <td>${p.downloads} تحميل</td>
+                        <td>${p.price === 0 ? 'مجاني' : p.price + ' ر.س'}</td>
+                        <td>${new Date(p.created_at).toLocaleDateString('ar-SA')}</td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('recent-products').innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الوصف</th>
+                                <th>التحميلات</th>
+                                <th>السعر</th>
+                                <th>التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody>${recentProductsHtml || '<tr><td colspan="5">لا توجد منتجات</td></tr>'}</tbody>
+                    </table>
+                `;
+            } catch (error) {
+                console.error('Error loading dashboard:', error);
+            }
+        }
+
+        // Load products
+        async function loadProducts() {
+            try {
+                const response = await fetch(`${API_URL}/api/scripts`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const products = await response.json();
+
+                const productsHtml = products.map(p => `
+                    <tr>
+                        <td>${p.title}</td>
+                        <td>${p.description || '-'}</td>
+                        <td>${p.file_size ? (p.file_size / 1024).toFixed(2) + ' KB' : '-'}</td>
+                        <td>${p.downloads}</td>
+                        <td>${p.price === 0 ? 'مجاني' : p.price + ' ر.س'}</td>
+                        <td>${p.license_key}</td>
+                        <td>
+                            <button class="btn btn-small btn-info" onclick="editProduct(${p.id}, '${p.title}', '${p.description || ''}', ${p.price}, '${p.ip_address || ''}')">✏️ تعديل</button>
+                            <button class="btn btn-small btn-danger" onclick="deleteProduct(${p.id})">🗑️ حذف</button>
+                        </td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('products-list').innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>الاسم</th>
+                                <th>الوصف</th>
+                                <th>الحجم</th>
+                                <th>التحميلات</th>
+                                <th>السعر</th>
+                                <th>الترخيص</th>
+                                <th>الإجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody>${productsHtml || '<tr><td colspan="7">لا توجد منتجات</td></tr>'}</tbody>
+                    </table>
+                `;
+            } catch (error) {
+                console.error('Error loading products:', error);
+                document.getElementById('products-list').innerHTML = '<p>خطأ في تحميل المنتجات</p>';
+            }
+        }
+
+        // Load users
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_URL}/api/admin/users`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const users = await response.json();
+
+                const usersHtml = users.map(u => `
+                    <tr>
+                        <td>${u.id}</td>
+                        <td>${u.username}</td>
+                        <td>${u.email}</td>
+                        <td>${u.is_admin ? '✅ مسؤول' : '❌ مستخدم'}</td>
+                        <td>${new Date(u.created_at).toLocaleDateString('ar-SA')}</td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('users-list').innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>اسم المستخدم</th>
+                                <th>البريد الإلكتروني</th>
+                                <th>النوع</th>
+                                <th>تاريخ التسجيل</th>
+                            </tr>
+                        </thead>
+                        <tbody>${usersHtml || '<tr><td colspan="5">لا يوجد مستخدمين</td></tr>'}</tbody>
+                    </table>
+                `;
+            } catch (error) {
+                console.error('Error loading users:', error);
+                document.getElementById('users-list').innerHTML = '<p>خطأ في تحميل المستخدمين</p>';
+            }
+        }
+
+        // Load users select
+        async function loadUsersSelect() {
+            try {
+                const response = await fetch(`${API_URL}/api/admin/users`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const users = await response.json();
+
+                const usersHtml = users.map(u => 
+                    `<option value="${u.id}">${u.username} (${u.email})</option>`
+                ).join('');
+
+                document.getElementById('user-select').innerHTML = '<option value="">-- اختر مستخدم --</option>' + usersHtml;
+            } catch (error) {
+                console.error('Error loading users:', error);
+            }
+        }
+
+        // Load products select
+        async function loadProductsSelect() {
+            try {
+                const response = await fetch(`${API_URL}/api/scripts`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const products = await response.json();
+
+                const productsHtml = products.map(p => 
+                    `<option value="${p.id}">${p.title} (${p.price === 0 ? 'مجاني' : p.price + ' ر.س'})</option>`
+                ).join('');
+
+                document.getElementById('product-select').innerHTML = '<option value="">-- اختر منتج --</option>' + productsHtml;
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        // Give product to user
+        async function giveProductToUser() {
+            const userId = document.getElementById('user-select').value;
+            const scriptId = document.getElementById('product-select').value;
+
+            if (!userId || !scriptId) {
+                alert('الرجاء اختيار مستخدم ومنتج');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/api/admin/give-product`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ user_id: parseInt(userId), script_id: parseInt(scriptId) })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('✅ تم إعطاء المنتج بنجاح!');
+                    loadGivenProducts();
+                    document.getElementById('user-select').value = '';
+                    document.getElementById('product-select').value = '';
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error giving product:', error);
+                alert('خطأ في إعطاء المنتج');
+            }
+        }
+
+        // Load given products
+        async function loadGivenProducts() {
+            try {
+                const [usersRes, productsRes] = await Promise.all([
+                    fetch(`${API_URL}/api/admin/users`, { headers: { 'Authorization': `Bearer ${token}` } }),
+                    fetch(`${API_URL}/api/scripts`, { headers: { 'Authorization': `Bearer ${token}` } })
+                ]);
+
+                const users = await usersRes.json();
+                const products = await productsRes.json();
+
+                // This is a placeholder - in production, you'd need a separate endpoint
+                const givenHtml = '<tr><td colspan="3">لا توجد بيانات متاحة</td></tr>';
+
+                document.getElementById('given-products-table').innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>المستخدم</th>
+                                <th>المنتج</th>
+                                <th>التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody>${givenHtml}</tbody>
+                    </table>
+                `;
+            } catch (error) {
+                console.error('Error loading given products:', error);
+            }
+        }
+
+        // Load transactions
+        async function loadTransactions() {
+            try {
+                const response = await fetch(`${API_URL}/api/admin/transactions`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (!response.ok) {
+                    document.getElementById('transactions-list').innerHTML = '<p>لا توجد معاملات حتى الآن</p>';
+                    return;
+                }
+
+                const transactions = await response.json();
+                const transactionsHtml = transactions.map(t => `
+                    <tr>
+                        <td>${t.user_id}</td>
+                        <td>${t.script_id}</td>
+                        <td>${t.amount}</td>
+                        <td>${t.transaction_type}</td>
+                        <td>${new Date(t.created_at).toLocaleDateString('ar-SA')}</td>
+                    </tr>
+                `).join('');
+
+                document.getElementById('transactions-list').innerHTML = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>المستخدم</th>
+                                <th>المنتج</th>
+                                <th>المبلغ</th>
+                                <th>النوع</th>
+                                <th>التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody>${transactionsHtml}</tbody>
+                    </table>
+                `;
+            } catch (error) {
+                document.getElementById('transactions-list').innerHTML = '<p>لا توجد معاملات</p>';
+            }
+        }
+
+        // Add product
+        document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = new FormData();
+            formData.append('title', document.getElementById('product-title').value);
+            formData.append('description', document.getElementById('product-description').value);
+            formData.append('price', document.getElementById('product-price').value);
+            formData.append('ip_address', document.getElementById('product-ip').value);
+            formData.append('file', document.getElementById('product-file').files[0]);
+
+            try {
+                const response = await fetch(`${API_URL}/api/scripts/upload`, {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('✅ تم رفع المنتج بنجاح!');
+                    document.getElementById('add-product-form').reset();
+                    switchTab('products');
+                } else {
+                    alert('❌ ' + data.message);
+                }
+            } catch (error) {
+                console.error('Error adding product:', error);
+                alert('خطأ في رفع المنتج');
+            }
+        });
+
+        // Edit product
+        function editProduct(id, title, description, price, ip) {
+            document.getElementById('edit-product-id').value = id;
+            document.getElementById('edit-title').value = title;
+            document.getElementById('edit-description').value = description;
+            document.getElementById('edit-price').value = price;
+            document.getElementById('edit-ip').value = ip;
+            document.getElementById('edit-modal').style.display = 'block';
+        }
+
+        // Save edited product
+        document.getElementById('edit-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const id = document.getElementById('edit-product-id').value;
+            const data = {
+                title: document.getElementById('edit-title').value,
+                description: document.getElementById('edit-description').value,
+                price: parseFloat(document.getElementById('edit-price').value),
+                ip_address: document.getElementById('edit-ip').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/api/scripts/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    alert('✅ تم تحديث المنتج بنجاح!');
+                    closeModal();
+                    loadProducts();
+                } else {
+                    alert('❌ خطأ في تحديث المنتج');
+                }
+            } catch (error) {
+                console.error('Error updating product:', error);
+                alert('خطأ في تحديث المنتج');
+            }
+        });
+
+        // Delete product
+        async function deleteProduct(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا المنتج؟')) return;
+
+            try {
+                const response = await fetch(`${API_URL}/api/scripts/${id}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (response.ok) {
+                    alert('✅ تم حذف المنتج بنجاح!');
+                    loadProducts();
+                } else {
+                    alert('❌ خطأ في حذف المنتج');
+                }
+            } catch (error) {
+                console.error('Error deleting product:', error);
+                alert('خطأ في حذف المنتج');
+            }
+        }
+
+        // Close modal
+        function closeModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            window.location.href = 'login.html';
+        }
+
+        // Load dashboard on page load
+        loadDashboard();
+    </script>
+</body>
+</html>
